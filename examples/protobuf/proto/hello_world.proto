@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package examples.hello_world;
+
+message HelloWorld {
+    string name = 1;
+    int32 id = 2;
+    string message = 3;
+}
