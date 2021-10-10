@@ -58,3 +58,22 @@ load("@rules_proto//proto:repositories.bzl", "rules_proto_dependencies", "rules_
 rules_proto_dependencies()
 
 rules_proto_toolchains()
+
+# TCMalloc
+http_archive(
+    name = "com_google_tcmalloc",
+    sha256 = "ec064ae7c3aacc0ca838bda774c2a03cbe1ce3330e48a48f75d8dbd4496ffb52",
+    strip_prefix = "tcmalloc-9bd7897410d837b98eecfb8bd67d0efb68809f2f",
+    urls = [
+        "https://github.com/google/tcmalloc/archive/9bd7897410d837b98eecfb8bd67d0efb68809f2f.zip",
+    ],
+)
+
+# CRC32, Snappy, Leveldb
+load("//third_party:repositories.bzl", "repo_crc32c", "repo_snappy", "repo_leveldb")
+
+repo_crc32c()
+
+repo_snappy()
+
+repo_leveldb()
