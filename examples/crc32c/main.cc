@@ -1,10 +1,9 @@
 #include <iostream>
 
-#include "crc32c/crc32c.h"
 #include "absl/strings/string_view.h"
+#include "crc32c/crc32c.h"
 
-int main()
-{
+int main() {
     const std::uint8_t buffer[] = {0, 0, 0, 0};
     std::uint32_t result;
 

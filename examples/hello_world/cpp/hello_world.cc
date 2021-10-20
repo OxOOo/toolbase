@@ -4,12 +4,11 @@
 
 #include "absl/strings/str_join.h"
 
-int main()
-{
-  std::vector<std::string> v = {"foo", "bar", "baz"};
-  std::string s = absl::StrJoin(v, "-");
+int main() {
+    std::vector<std::string> v = {"foo", "bar", "baz"};
+    std::string s = absl::StrJoin(v, "-");
 
-  std::cout << "Joined string: " << s << "\n";
+    std::cout << "Joined string: " << s << "\n";
 
-  return 0;
+    return 0;
 }

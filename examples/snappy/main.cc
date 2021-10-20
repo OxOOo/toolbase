@@ -3,8 +3,7 @@
 
 #include "snappy.h"
 
-int main()
-{
+int main() {
     std::string data = "hello world data";
 
     std::string compressed;
@@ -12,7 +11,11 @@ int main()
     std::cout << "compressed length = " << compressed.length() << std::endl;
 
     size_t uncompressed_length;
-    std::cout << "get length : " << snappy::GetUncompressedLength(compressed.data(), compressed.length(), &uncompressed_length) << std::endl;
+    std::cout << "get length : "
+              << snappy::GetUncompressedLength(compressed.data(),
+                                               compressed.length(),
+                                               &uncompressed_length)
+              << std::endl;
     std::cout << "length = " << uncompressed_length << std::endl;
 
     std::string uncompressed;

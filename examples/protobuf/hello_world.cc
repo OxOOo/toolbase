@@ -2,8 +2,7 @@
 
 #include "examples/protobuf/proto/hello_world.pb.h"
 
-int main()
-{
+int main() {
     std::cout << "Hello World" << std::endl;
 
     examples::hello_world::HelloWorld msg;

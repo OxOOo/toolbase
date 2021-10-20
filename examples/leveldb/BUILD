@@ -1,8 +1,8 @@
 package(default_visibility = ["//visibility:public"])
 
 cc_binary(
-    name = "leveldb",
-    srcs = ["leveldb.cc"],
+    name = "main",
+    srcs = ["main.cc"],
     deps = [
         "@com_google_absl//absl/strings",
         "@com_google_leveldb//:leveldb",
