@@ -23,6 +23,9 @@ cc_library(
     srcs = ["filesystem.cc"],
     hdrs = ["filesystem.h"],
     deps = [
+        ":path",
+        "//utils:status_macros",
+        "@com_google_absl//absl/status",
         "@com_google_absl//absl/status:statusor",
         "@com_google_absl//absl/strings",
     ],
@@ -33,6 +36,7 @@ cc_test(
     srcs = ["filesystem_test.cc"],
     deps = [
         ":filesystem",
+        ":path",
         "//utils:testing",
         "@com_google_googletest//:gtest_main",
     ],

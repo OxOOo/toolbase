@@ -26,6 +26,23 @@ http_archive(
     urls = ["https://github.com/google/benchmark/archive/e451e50e9b8af453f076dec10bd6890847f1624e.zip"],
 )
 
+# Google flags
+http_archive(
+    name = "com_gflags_gflags",
+    sha256 = "34af2f15cf7367513b352bdcd2493ab14ce43692d2dcd9dfc499492966c64dcf",
+    strip_prefix = "gflags-2.2.2",
+    urls = ["https://github.com/gflags/gflags/archive/v2.2.2.tar.gz"],
+)
+
+# Glog
+http_archive(
+    name = "com_google_glog",
+    repo_mapping = {"@com_github_gflags_gflags": "@com_gflags_gflags"},
+    sha256 = "21bc744fb7f2fa701ee8db339ded7dce4f975d0d55837a97be7d46e8382dea5a",
+    strip_prefix = "glog-0.5.0",
+    urls = ["https://github.com/google/glog/archive/v0.5.0.zip"],
+)
+
 # C++ rules for Bazel.
 http_archive(
     name = "rules_cc",  # 2021-06-07T16:41:49Z
@@ -70,7 +87,7 @@ http_archive(
 )
 
 # CRC32, Snappy, Leveldb
-load("//third_party:repositories.bzl", "repo_crc32c", "repo_snappy", "repo_leveldb")
+load("//third_party:repositories.bzl", "repo_crc32c", "repo_leveldb", "repo_snappy")
 
 repo_crc32c()
 
