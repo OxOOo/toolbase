@@ -23,8 +23,9 @@ class PathStat {
     bool IsFIFO() const { return S_ISFIFO(stat_.st_mode); }
     bool IsLink() const { return S_ISLNK(stat_.st_mode); }
     bool IsSocket() const { return S_ISSOCK(stat_.st_mode); }
-    mode_t Mode() const { return stat_.st_mode & 07777; }
-    size_t Size() const { return stat_.st_size; }
+
+    mode_t mode() const { return stat_.st_mode & 07777; }
+    size_t size() const { return stat_.st_size; }
 
    private:
     const struct stat stat_;
@@ -54,6 +55,13 @@ absl::StatusOr<std::vector<std::string>> ListDirectory(absl::string_view path);
 
 // Removes all the sub items of `path`. Will return ok if `path` not exists.
 absl::Status RmTree(absl::string_view path);
+
+absl::StatusOr<std::string> GetContents(absl::string_view path);
+absl::Status GetContents(std::string& out, absl::string_view path);
+
+absl::Status PutContents(absl::string_view data, absl::string_view path);
+absl::Status PutContents(const uint8_t* data, size_t count,
+                         absl::string_view path);
 
 }  // namespace file
 

@@ -27,3 +27,13 @@ cc_library(
         "@com_google_absl//absl/status:statusor",
     ],
 )
+
+cc_test(
+    name = "status_macros_test",
+    srcs = ["status_macros_test.cc"],
+    deps = [
+        ":status_macros",
+        "@com_google_glog//:glog",
+        "@com_google_googletest//:gtest",
+    ],
+)

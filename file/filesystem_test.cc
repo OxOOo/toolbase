@@ -32,9 +32,9 @@ TEST(Stat, TestDirectory) {
 TEST(Stat, TestFilePermossion) {
     auto result = Stat("/etc/passwd");
     EXPECT_OK(result);
-    EXPECT_EQ(result->Mode() & (S_IRUSR | S_IWUSR), S_IRUSR | S_IWUSR);
-    EXPECT_EQ(result->Mode() & S_IROTH, S_IROTH);
-    EXPECT_EQ(result->Mode() & S_IWOTH, 0);
+    EXPECT_EQ(result->mode() & (S_IRUSR | S_IWUSR), S_IRUSR | S_IWUSR);
+    EXPECT_EQ(result->mode() & S_IROTH, S_IROTH);
+    EXPECT_EQ(result->mode() & S_IWOTH, 0);
 }
 
 TEST(LStat, FileNotExists) {
@@ -56,9 +56,9 @@ TEST(LStat, TestDirectory) {
 TEST(LStat, TestFilePermossion) {
     auto result = LStat("/etc/passwd");
     EXPECT_OK(result);
-    EXPECT_EQ(result->Mode() & (S_IRUSR | S_IWUSR), S_IRUSR | S_IWUSR);
-    EXPECT_EQ(result->Mode() & S_IROTH, S_IROTH);
-    EXPECT_EQ(result->Mode() & S_IWOTH, 0);
+    EXPECT_EQ(result->mode() & (S_IRUSR | S_IWUSR), S_IRUSR | S_IWUSR);
+    EXPECT_EQ(result->mode() & S_IROTH, S_IROTH);
+    EXPECT_EQ(result->mode() & S_IWOTH, 0);
 }
 
 TEST(Exists, FileExists) {
@@ -84,9 +84,9 @@ TEST(CreateFile, TestCreateFile) {
     EXPECT_THAT(CreateFile(kFile, S_IRWXU),
                 StatusIs(absl::StatusCode::kInternal));
     EXPECT_THAT(Exists(kFile), IsOkAndHolds(true));
-    EXPECT_EQ(Stat(kFile)->Mode() & S_IRWXU, S_IRWXU);
-    EXPECT_EQ(Stat(kFile)->Mode() & S_IRWXG, 0);
-    EXPECT_EQ(Stat(kFile)->Mode() & S_IRWXO, 0);
+    EXPECT_EQ(Stat(kFile)->mode() & S_IRWXU, S_IRWXU);
+    EXPECT_EQ(Stat(kFile)->mode() & S_IRWXG, 0);
+    EXPECT_EQ(Stat(kFile)->mode() & S_IRWXO, 0);
     EXPECT_OK(Unlink(kFile));
 }
 
@@ -101,9 +101,9 @@ TEST(Chmod, TestChmod) {
         ASSERT_OK(Unlink(kFile));
     }
     EXPECT_OK(CreateFile(kFile, S_IRWXU));
-    EXPECT_EQ(Stat(kFile)->Mode() & S_IRWXU, S_IRWXU);
+    EXPECT_EQ(Stat(kFile)->mode() & S_IRWXU, S_IRWXU);
     EXPECT_OK(Chmod(kFile, S_IRUSR | S_IWUSR));
-    EXPECT_EQ(Stat(kFile)->Mode() & S_IRWXU, S_IRUSR | S_IWUSR);
+    EXPECT_EQ(Stat(kFile)->mode() & S_IRWXU, S_IRUSR | S_IWUSR);
     EXPECT_OK(Unlink(kFile));
 }
 
@@ -208,6 +208,26 @@ TEST(RmTree, RmTree) {
     ASSERT_OK(CreateFile(PathJoin(kPath, "b"), 0644));
     EXPECT_OK(RmTree(kPath));
     EXPECT_THAT(Exists(kPath), IsOkAndHolds(false));
+}
+
+TEST(GetPutContents, GetPutContents) {
+    static constexpr absl::string_view kFile = "/tmp/test_get_put_contents";
+    if (*Exists(kFile)) {
+        ASSERT_OK(Unlink(kFile));
+    }
+    EXPECT_OK(PutContents("hello world", kFile));
+    EXPECT_THAT(GetContents(kFile), IsOkAndHolds("hello world"));
+    ASSERT_OK(Unlink(kFile));
+}
+
+TEST(GetContents, FileNotExists) {
+    EXPECT_THAT(GetContents("/notexists"),
+                StatusIs(absl::StatusCode::kInternal));
+}
+
+TEST(PutContents, PathNotExists) {
+    EXPECT_THAT(PutContents("data", "/notexists/file"),
+                StatusIs(absl::StatusCode::kInternal));
 }
 
 }  // namespace

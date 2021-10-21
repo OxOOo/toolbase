@@ -28,7 +28,7 @@ inline const ::absl::Status& GetStatus(const ::absl::StatusOr<T>& status) {
 #define ASSIGN_OR_RETURN_IMPL(rvalue, lhs, rexpr)      \
     auto rvalue = (rexpr);                             \
     if (!rvalue.status().ok()) return rvalue.status(); \
-    lhs = rvalue.value()
+    lhs = std::move(rvalue.value())
 
 #define ASSIGN_OR_RETURN(lhs, rexpr) \
     ASSIGN_OR_RETURN_IMPL(           \
