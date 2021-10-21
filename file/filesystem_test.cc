@@ -217,6 +217,8 @@ TEST(GetPutContents, GetPutContents) {
     }
     EXPECT_OK(PutContents("hello world", kFile));
     EXPECT_THAT(GetContents(kFile), IsOkAndHolds("hello world"));
+    EXPECT_OK(PutContents("hello world2", kFile));
+    EXPECT_THAT(GetContents(kFile), IsOkAndHolds("hello world2"));
     ASSERT_OK(Unlink(kFile));
 }
 
