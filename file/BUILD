@@ -57,3 +57,14 @@ cc_library(
         "@com_google_glog//:glog",
     ],
 )
+
+cc_test(
+    name = "file_test",
+    srcs = ["file_test.cc"],
+    deps = [
+        ":file",
+        ":filesystem",
+        "//utils:testing",
+        "@com_google_googletest//:gtest_main",
+    ],
+)

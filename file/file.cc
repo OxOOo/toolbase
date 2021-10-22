@@ -35,15 +35,15 @@ absl::StatusOr<std::unique_ptr<File>> Open(absl::string_view path, int flags,
 }
 
 absl::Status File::Close() {
-    if (close(fd) == 0) {
-        fd = -1;
+    if (close(fd_) == 0) {
+        fd_ = -1;
         return absl::OkStatus();
     }
     return absl::InternalError(strerror(errno));
 }
 
 absl::Status File::Sync() {
-    if (fsync(fd) == 0) {
+    if (fsync(fd_) == 0) {
         return absl::OkStatus();
     }
     return absl::InternalError(strerror(errno));
@@ -62,7 +62,7 @@ absl::Status File::ReadTo(std::string& out, size_t count) {
     }
 
     std::vector<uint8_t> buf(count);
-    ssize_t ret = read(fd, buf.data(), count);
+    ssize_t ret = read(fd_, buf.data(), count);
 
     if (ret == 0) {
         out = std::string();
@@ -93,7 +93,7 @@ absl::Status File::PReadTo(std::string& out, size_t count, off_t offset) {
     }
 
     std::vector<uint8_t> buf(count);
-    ssize_t ret = pread(fd, buf.data(), count, offset);
+    ssize_t ret = pread(fd_, buf.data(), count, offset);
 
     if (ret == 0) {
         out = std::string();
@@ -117,7 +117,7 @@ absl::StatusOr<size_t> File::Write(const uint8_t* data, size_t count) {
             absl::StrFormat("`count` = %d which should > 0", count));
     }
 
-    ssize_t ret = write(fd, data, count);
+    ssize_t ret = write(fd_, data, count);
     if (ret < 0) {
         return absl::InternalError(strerror(errno));
     }
@@ -139,7 +139,7 @@ absl::StatusOr<size_t> File::PWrite(const uint8_t* data, size_t count,
             absl::StrFormat("`offset` = %d which should >= 0", offset));
     }
 
-    ssize_t ret = pwrite(fd, data, count, offset);
+    ssize_t ret = pwrite(fd_, data, count, offset);
     if (ret < 0) {
         return absl::InternalError(strerror(errno));
     }
@@ -147,7 +147,7 @@ absl::StatusOr<size_t> File::PWrite(const uint8_t* data, size_t count,
 }
 
 absl::StatusOr<off_t> File::LSeek(off_t offset, int whence) {
-    off_t ret = lseek(fd, offset, whence);
+    off_t ret = lseek(fd_, offset, whence);
     if (ret < 0) {
         return absl::InternalError(strerror(errno));
     }

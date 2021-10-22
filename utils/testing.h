@@ -57,16 +57,10 @@ class IsOkAndHoldsMatcherImpl
             return false;
         }
 
-        ::testing::StringMatchResultListener inner_listener;
-        const bool matches =
-            inner_matcher_.MatchAndExplain(*actual_value, &inner_listener);
-        const std::string inner_explanation = inner_listener.str();
-        if (!inner_explanation.empty()) {
-            *result_listener << "which contains value "
-                             << ::testing::PrintToString(*actual_value) << ", "
-                             << inner_explanation;
-        }
-        return matches;
+        *result_listener << "which contains value "
+                         << ::testing::PrintToString(*actual_value) << ",";
+
+        return inner_matcher_.MatchAndExplain(*actual_value, result_listener);
     }
 
    private:
@@ -102,8 +96,11 @@ class MonoIsOkMatcherImpl : public ::testing::MatcherInterface<T> {
     void DescribeNegationTo(std::ostream* os) const override {
         *os << "is not OK";
     }
-    bool MatchAndExplain(T actual_value,
-                         ::testing::MatchResultListener*) const override {
+    bool MatchAndExplain(
+        T actual_value,
+        ::testing::MatchResultListener* listener) const override {
+        *listener << "the status is "
+                  << testing_internal::GetStatus(actual_value);
         return testing_internal::GetStatus(actual_value).ok();
     }
 };
@@ -145,9 +142,12 @@ class StatusIsMatcherImpl : public ::testing::MatcherInterface<T> {
     void DescribeNegationTo(std::ostream* os) const override {
         *os << "is not " << absl::StatusCodeToString(status_code_);
     }
-    bool MatchAndExplain(T actual_value,
-                         ::testing::MatchResultListener*) const override {
-        return testing_internal::GetStatus(actual_value).code() == status_code_;
+    bool MatchAndExplain(
+        T actual_value,
+        ::testing::MatchResultListener* listener) const override {
+        auto actual_status = testing_internal::GetStatus(actual_value);
+        *listener << "the status code " << actual_status;
+        return actual_status.code() == status_code_;
     }
 
    private:
