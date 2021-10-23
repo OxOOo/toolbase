@@ -87,10 +87,16 @@ http_archive(
 )
 
 # CRC32, Snappy, Leveldb
-load("//third_party:repositories.bzl", "repo_crc32c", "repo_leveldb", "repo_snappy")
+load("//third_party:repositories.bzl", "repo_crc32c", "repo_json", "repo_leveldb", "repo_snappy")
 
+# @com_google_crc32c//:crc32c
 repo_crc32c()
 
+# @com_google_snappy//:snappy
 repo_snappy()
 
+# @com_google_leveldb//:leveldb
 repo_leveldb()
+
+# @nlohmann_json//:json
+repo_json()

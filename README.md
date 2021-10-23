@@ -24,3 +24,4 @@ bazel run //examples/hello_world/cpp:hello_world
 * [crc32c](https://github.com/google/crc32c)
 * [snappy](https://github.com/google/snappy)
 * [leveldb](https://github.com/google/leveldb)
+* [nlohmann json](https://github.com/nlohmann/json)

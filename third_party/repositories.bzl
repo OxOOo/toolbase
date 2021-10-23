@@ -53,3 +53,19 @@ def repo_snappy():
             "https://github.com/google/snappy/archive/2b63814b15a2aaae54b7943f0cd935892fae628f.zip",
         ],
     )
+
+def repo_json():
+    """
+    Link json library.
+    """
+
+    maybe(
+        http_archive,
+        name = "nlohmann_json",  # 1.1.9
+        build_file = "//third_party/json:json.BUILD",
+        sha256 = "a5af2225a81b5e8842ee6a95715674e734b91b1d8d23a964dc23d7eac338ca60",
+        strip_prefix = "json-f5b3fb326c1a651cd3e62201b0e7074cf987f748",
+        urls = [
+            "https://github.com/nlohmann/json/archive/f5b3fb326c1a651cd3e62201b0e7074cf987f748.zip",
+        ],
+    )
