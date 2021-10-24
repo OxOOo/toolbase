@@ -74,8 +74,8 @@ absl::Status EPoll::Delete(File* file) {
     return absl::OkStatus();
 }
 
-absl::StatusOr<std::vector<EPollEvent>> EPoll::Wait(int maxevents,
-                                                    absl::Duration* timeout) {
+absl::StatusOr<std::vector<EPollEvent>> EPoll::Wait(
+    int maxevents, const absl::Duration* timeout) {
     if (maxevents <= 0) {
         return absl::InvalidArgumentError(absl::StrFormat(
             "`maxevents` = %d should be greater than zero", maxevents));

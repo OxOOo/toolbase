@@ -53,7 +53,7 @@ class EPoll {
     // Waits epoll, returns triggered events (up to `maxevents` events).
     // `timeout` = nullptr means blocks indefinitely.
     absl::StatusOr<std::vector<EPollEvent>> Wait(int maxevents,
-                                                 absl::Duration* timeout);
+                                                 const absl::Duration* timeout);
 
    private:
     int efd_;
