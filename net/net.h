@@ -58,7 +58,17 @@ class SocketAddr {
     struct sockaddr* mutable_addr() {
         return (struct sockaddr*)&addr_;
     }
-    socklen_t len() const { return sizeof(addr_); }
+    socklen_t len() const {
+        if (addr_.ss_family == AF_INET) {
+            return sizeof(struct sockaddr_in);
+        } else if (addr_.ss_family == AF_INET6) {
+            return sizeof(struct sockaddr_in6);
+        } else if (addr_.ss_family == AF_UNIX) {
+            return sizeof(struct sockaddr_un);
+        } else {
+            return sizeof(addr_);
+        }
+    }
 
     static absl::StatusOr<SocketAddr> NewIPv4(absl::string_view ip,
                                               uint16_t port);
