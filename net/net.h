@@ -69,6 +69,7 @@ class SocketAddr {
             return sizeof(addr_);
         }
     }
+    socklen_t storage_len() const { return sizeof(addr_); }
 
     static absl::StatusOr<SocketAddr> NewIPv4(absl::string_view ip,
                                               uint16_t port);

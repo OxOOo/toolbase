@@ -148,7 +148,7 @@ absl::Status NetSocket::Listen(int backlog) {
 
 absl::StatusOr<std::unique_ptr<NetSocket>> NetSocket::Accept() {
     struct sockaddr_storage addr;
-    socklen_t len = sizeof(addr);
+    socklen_t len = bound_addr_.len();
     int fd = accept(fd_, (struct sockaddr *)&addr, &len);
     if (fd <= 0) {
         return absl::InternalError(strerror(errno));
@@ -254,7 +254,7 @@ absl::Status NetSocket::RecvFromTo(std::string &out, size_t count, int flags,
     if (src_addr == NULL || src_addr == nullptr) {
         ret = recvfrom(fd_, buf.data(), count, flags, NULL, NULL);
     } else {
-        socklen_t len = src_addr->len();
+        socklen_t len = src_addr->storage_len();
         ret = recvfrom(fd_, buf.data(), count, flags, src_addr->mutable_addr(),
                        &len);
     }
