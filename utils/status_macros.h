@@ -16,10 +16,11 @@ inline const ::absl::Status& GetStatus(const ::absl::StatusOr<T>& status) {
 
 }  // namespace status_macros_internal
 
-#define RETURN_IF_ERROR(expr)                  \
-    do {                                       \
-        const ::absl::Status _status = (expr); \
-        if (!_status.ok()) return _status;     \
+#define RETURN_IF_ERROR(expr)                        \
+    do {                                             \
+        const ::absl::Status _status =               \
+            status_macros_internal::GetStatus(expr); \
+        if (!_status.ok()) return _status;           \
     } while (0)
 
 #define STATUS_MACROS_CONCAT_NAME_INNER(x, y) x##y
