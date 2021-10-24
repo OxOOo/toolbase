@@ -34,6 +34,8 @@ class File {
 
     absl::Status Sync();
 
+    // Reads string from file.
+    // Empty string means eof.
     absl::StatusOr<std::string> Read(size_t count);
     absl::Status ReadTo(std::string& out, size_t count);
     absl::StatusOr<std::string> PRead(size_t count, off_t offset);

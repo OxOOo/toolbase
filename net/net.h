@@ -112,6 +112,8 @@ class NetSocket : public file::File {
     absl::StatusOr<size_t> Send(absl::string_view data, int flags);
     absl::StatusOr<size_t> Send(const uint8_t* data, size_t count, int flags);
 
+    // Recvs string from file.
+    // Empty string means eof.
     absl::StatusOr<std::string> Recv(size_t count, int flags);
     absl::Status RecvTo(std::string& out, size_t count, int flags);
 
@@ -122,6 +124,7 @@ class NetSocket : public file::File {
                                   const SocketAddr* dest_addr);
 
     // Receives message from a specific addr, `src_addr` can be NULL or nullptr.
+    // Empty returned string means eof.
     absl::StatusOr<std::string> RecvFrom(size_t count, int flags,
                                          SocketAddr* src_addr);
     absl::Status RecvFromTo(std::string& out, size_t count, int flags,
