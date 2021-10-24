@@ -68,3 +68,27 @@ cc_test(
         "@com_google_googletest//:gtest_main",
     ],
 )
+
+cc_library(
+    name = "epoll",
+    srcs = ["epoll.cc"],
+    hdrs = ["epoll.h"],
+    deps = [
+        ":file",
+        "//utils:status_macros",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings:str_format",
+        "@com_google_absl//absl/time",
+    ],
+)
+
+cc_test(
+    name = "epoll_test",
+    srcs = ["epoll_test.cc"],
+    deps = [
+        ":epoll",
+        "//utils:testing",
+        "@com_google_googletest//:gtest_main",
+    ],
+)

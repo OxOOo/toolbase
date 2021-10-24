@@ -150,7 +150,7 @@ absl::StatusOr<std::unique_ptr<NetSocket>> NetSocket::Accept() {
     struct sockaddr_storage addr;
     socklen_t len = bound_addr_.len();
     int fd = accept(fd_, (struct sockaddr *)&addr, &len);
-    if (fd <= 0) {
+    if (fd < 0) {
         return absl::InternalError(strerror(errno));
     }
     auto socket = std::unique_ptr<NetSocket>(new NetSocket(fd));
