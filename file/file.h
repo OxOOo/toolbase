@@ -47,6 +47,9 @@ class File {
     absl::StatusOr<size_t> PWrite(const uint8_t* data, size_t count,
                                   off_t offset);
 
+    absl::Status WriteAll(absl::string_view data);
+    absl::Status WriteAll(const uint8_t* data, size_t count);
+
     // Seek
     // Possible whence: SEEK_SET, SEEK_CUR, SEEK_END
     // Returns the resulting offset location

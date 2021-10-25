@@ -146,6 +146,21 @@ absl::StatusOr<size_t> File::PWrite(const uint8_t* data, size_t count,
     return ret;
 }
 
+absl::Status File::WriteAll(absl::string_view data) {
+    return WriteAll((const uint8_t*)data.data(), data.length());
+}
+absl::Status File::WriteAll(const uint8_t* data, size_t count) {
+    size_t pos = 0;
+    while (pos < count) {
+        ASSIGN_OR_RETURN(size_t written, Write(data + pos, count - pos));
+        if (written == 0) {
+            return absl::InternalError("Write 0 bytes");
+        }
+        pos += written;
+    }
+    return absl::OkStatus();
+}
+
 absl::StatusOr<off_t> File::LSeek(off_t offset, int whence) {
     off_t ret = lseek(fd_, offset, whence);
     if (ret < 0) {
