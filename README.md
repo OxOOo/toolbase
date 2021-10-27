@@ -3,7 +3,7 @@
 ## Run Examples
 
 ```sh
-bazel run //examples/hello_world/cpp:hello_world
+bazel run --config=c++17 //examples/hello_world/cpp:hello_world
 ```
 
 ## Modules
