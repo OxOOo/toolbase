@@ -36,9 +36,9 @@ class EPoll {
         }
     }
 
-    int efd() const { return efd_; }
-
     static absl::StatusOr<std::unique_ptr<EPoll>> Create();
+
+    int efd() const { return efd_; }
 
     absl::Status Close();
 

@@ -33,7 +33,7 @@ class File : public ::testing::Test {
 TEST_F(File, TestAutoClose) {
     int fd = -1;
     {
-        auto file = Open(kFile, O_WRONLY | O_CREAT, 0644);
+        auto file = file::File::Open(kFile, O_WRONLY | O_CREAT, 0644);
         EXPECT_OK(file);
 
         fd = (*file)->fd();
@@ -44,17 +44,18 @@ TEST_F(File, TestAutoClose) {
 }
 
 TEST_F(File, ReadNotExists) {
-    EXPECT_THAT(Open(kFile, O_RDONLY), StatusIs(absl::StatusCode::kInternal));
+    EXPECT_THAT(file::File::Open(kFile, O_RDONLY),
+                StatusIs(absl::StatusCode::kInternal));
 }
 
 TEST_F(File, ReadWrite) {
     {
-        auto file = Open(kFile, O_WRONLY | O_CREAT, 0644);
+        auto file = file::File::Open(kFile, O_WRONLY | O_CREAT, 0644);
         EXPECT_OK(file);
         EXPECT_THAT((*file)->Write("hello world"), IsOkAndHolds(11));
     }
     {
-        auto file = Open(kFile, O_RDONLY);
+        auto file = file::File::Open(kFile, O_RDONLY);
         EXPECT_OK(file);
         EXPECT_THAT((*file)->Read(1024), IsOkAndHolds("hello world"));
     }
@@ -62,13 +63,13 @@ TEST_F(File, ReadWrite) {
 
 TEST_F(File, PReadWrite) {
     {
-        auto file = Open(kFile, O_WRONLY | O_CREAT, 0644);
+        auto file = file::File::Open(kFile, O_WRONLY | O_CREAT, 0644);
         EXPECT_OK(file);
         EXPECT_THAT((*file)->PWrite("hello world", 0), IsOkAndHolds(11));
         EXPECT_THAT((*file)->PWrite("hello world", 0), IsOkAndHolds(11));
     }
     {
-        auto file = Open(kFile, O_RDONLY);
+        auto file = file::File::Open(kFile, O_RDONLY);
         EXPECT_OK(file);
         EXPECT_THAT((*file)->PRead(1024, 0), IsOkAndHolds("hello world"));
         EXPECT_THAT((*file)->PRead(1024, 0), IsOkAndHolds("hello world"));
@@ -77,12 +78,12 @@ TEST_F(File, PReadWrite) {
 
 TEST_F(File, Seek) {
     {
-        auto file = Open(kFile, O_WRONLY | O_CREAT, 0644);
+        auto file = file::File::Open(kFile, O_WRONLY | O_CREAT, 0644);
         EXPECT_OK(file);
         EXPECT_THAT((*file)->Write("hello world"), IsOkAndHolds(11));
     }
     {
-        auto file = Open(kFile, O_RDONLY);
+        auto file = file::File::Open(kFile, O_RDONLY);
         EXPECT_OK(file);
         EXPECT_THAT((*file)->Read(1024), IsOkAndHolds("hello world"));
         EXPECT_THAT((*file)->LSeek(0, SEEK_SET), IsOkAndHolds(0));

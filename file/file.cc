@@ -4,14 +4,14 @@
 #include <unistd.h>
 
 #include <string>
-#include <vector>
 
 #include "absl/strings/str_format.h"
 #include "utils/status_macros.h"
 
 namespace file {
 
-absl::StatusOr<std::unique_ptr<File>> Open(absl::string_view path, int flags) {
+absl::StatusOr<std::unique_ptr<File>> File::Open(absl::string_view path,
+                                                 int flags) {
     std::string path_str = std::string(path);
 
     int fd = open(path_str.c_str(), flags);
@@ -22,8 +22,8 @@ absl::StatusOr<std::unique_ptr<File>> Open(absl::string_view path, int flags) {
     return std::unique_ptr<File>(new File(fd));
 }
 
-absl::StatusOr<std::unique_ptr<File>> Open(absl::string_view path, int flags,
-                                           mode_t mode) {
+absl::StatusOr<std::unique_ptr<File>> File::Open(absl::string_view path,
+                                                 int flags, mode_t mode) {
     std::string path_str = std::string(path);
 
     int fd = open(path_str.c_str(), flags, mode);
@@ -61,8 +61,8 @@ absl::Status File::ReadTo(std::string& out, size_t count) {
             absl::StrFormat("`count` = %d which should > 0", count));
     }
 
-    std::vector<uint8_t> buf(count);
-    ssize_t ret = read(fd_, buf.data(), count);
+    out.resize(count);
+    ssize_t ret = read(fd_, out.data(), count);
 
     if (ret == 0) {
         out = std::string();
@@ -71,8 +71,8 @@ absl::Status File::ReadTo(std::string& out, size_t count) {
     if (ret < 0) {
         return absl::InternalError(strerror(errno));
     }
+    out.resize(ret);
 
-    out = std::string((const char*)buf.data(), ret);
     return absl::OkStatus();
 }
 
@@ -92,8 +92,8 @@ absl::Status File::PReadTo(std::string& out, size_t count, off_t offset) {
             absl::StrFormat("`offset` = %d which should >= 0", offset));
     }
 
-    std::vector<uint8_t> buf(count);
-    ssize_t ret = pread(fd_, buf.data(), count, offset);
+    out.resize(count);
+    ssize_t ret = pread(fd_, out.data(), count, offset);
 
     if (ret == 0) {
         out = std::string();
@@ -102,8 +102,8 @@ absl::Status File::PReadTo(std::string& out, size_t count, off_t offset) {
     if (ret < 0) {
         return absl::InternalError(strerror(errno));
     }
+    out.resize(ret);
 
-    out = std::string((const char*)buf.data(), ret);
     return absl::OkStatus();
 }
 

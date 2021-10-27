@@ -18,6 +18,8 @@ namespace file {
 // `file::GetContents`/`file::PutContents` instead.
 class File {
    public:
+    // It's not recommend to use the constructor to create `File`, please use
+    // `File::Open` instead.
     explicit File(int fd) : fd_(fd) {}
     virtual ~File() {
         if (fd_ > 0) {
@@ -27,6 +29,16 @@ class File {
             }
         }
     }
+
+    // Opens a file.
+    // Common flags: O_APPEND, O_CLOEXEC, O_CREAT, O_NONBLOCK, O_WRONLY,
+    // O_RDONLY Examples:
+    //  Open("/file", O_RDONLY)
+    //  Open("/file", O_WRONLY | O_CREAT, 0644)
+    static absl::StatusOr<std::unique_ptr<File>> Open(absl::string_view path,
+                                                      int flags);
+    static absl::StatusOr<std::unique_ptr<File>> Open(absl::string_view path,
+                                                      int flags, mode_t mode);
 
     int fd() const { return fd_; }
 
@@ -58,15 +70,6 @@ class File {
    protected:
     int fd_;
 };
-
-// Opens a file.
-// Common flags: O_APPEND, O_CLOEXEC, O_CREAT, O_NONBLOCK, O_WRONLY, O_RDONLY
-// Examples:
-//  Open("/file", O_RDONLY)
-//  Open("/file", O_WRONLY | O_CREAT, 0644)
-absl::StatusOr<std::unique_ptr<File>> Open(absl::string_view path, int flags);
-absl::StatusOr<std::unique_ptr<File>> Open(absl::string_view path, int flags,
-                                           mode_t mode);
 
 }  // namespace file
 

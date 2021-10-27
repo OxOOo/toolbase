@@ -195,8 +195,8 @@ absl::Status NetSocket::RecvTo(std::string &out, size_t count, int flags) {
             absl::StrFormat("`count` = %d which should > 0", count));
     }
 
-    std::vector<uint8_t> buf(count);
-    ssize_t ret = recv(fd_, buf.data(), count, flags);
+    out.resize(count);
+    ssize_t ret = recv(fd_, out.data(), count, flags);
 
     if (ret == 0) {
         out = std::string();
@@ -205,8 +205,8 @@ absl::Status NetSocket::RecvTo(std::string &out, size_t count, int flags) {
     if (ret < 0) {
         return absl::InternalError(strerror(errno));
     }
+    out.resize(ret);
 
-    out = std::string((const char *)buf.data(), ret);
     return absl::OkStatus();
 }
 
@@ -249,13 +249,13 @@ absl::Status NetSocket::RecvFromTo(std::string &out, size_t count, int flags,
             absl::StrFormat("`count` = %d which should > 0", count));
     }
 
-    std::vector<uint8_t> buf(count);
+    out.resize(count);
     ssize_t ret = -1;
     if (src_addr == NULL || src_addr == nullptr) {
-        ret = recvfrom(fd_, buf.data(), count, flags, NULL, NULL);
+        ret = recvfrom(fd_, out.data(), count, flags, NULL, NULL);
     } else {
         socklen_t len = src_addr->storage_len();
-        ret = recvfrom(fd_, buf.data(), count, flags, src_addr->mutable_addr(),
+        ret = recvfrom(fd_, out.data(), count, flags, src_addr->mutable_addr(),
                        &len);
     }
 
@@ -266,8 +266,8 @@ absl::Status NetSocket::RecvFromTo(std::string &out, size_t count, int flags,
     if (ret < 0) {
         return absl::InternalError(strerror(errno));
     }
+    out.resize(ret);
 
-    out = std::string((const char *)buf.data(), ret);
     return absl::OkStatus();
 }
 

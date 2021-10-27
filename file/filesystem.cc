@@ -159,7 +159,7 @@ absl::StatusOr<std::string> GetContents(absl::string_view path) {
     return out;
 }
 absl::Status GetContents(std::string& out, absl::string_view path) {
-    ASSIGN_OR_RETURN(auto file, Open(path, O_RDONLY));
+    ASSIGN_OR_RETURN(auto file, File::Open(path, O_RDONLY));
     ASSIGN_OR_RETURN(auto stat, Stat(path));
     return file->ReadTo(out, stat.size());
 }
@@ -173,7 +173,7 @@ absl::Status PutContents(const uint8_t* data, size_t count,
         return absl::InvalidArgumentError(
             absl::StrFormat("`count` = %d which should > 0"));
     }
-    ASSIGN_OR_RETURN(auto file, Open(path, O_CREAT | O_WRONLY, 0644));
+    ASSIGN_OR_RETURN(auto file, File::Open(path, O_CREAT | O_WRONLY, 0644));
     while (count > 0) {
         errno = 0;
         ASSIGN_OR_RETURN(size_t size, file->Write(data, count));
