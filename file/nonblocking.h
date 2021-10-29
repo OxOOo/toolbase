@@ -37,6 +37,9 @@ class NonblockingIO {
     static absl::StatusOr<std::unique_ptr<NonblockingIO>> Create(
         std::unique_ptr<File> file);
 
+    const File* file() const { return file_.get(); }
+    File* file() { return file_.get(); }
+
     // Appends data to write buffer, this call will not perform write.
     void AppendWriteData(absl::string_view data);
 
