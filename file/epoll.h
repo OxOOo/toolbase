@@ -48,7 +48,12 @@ class EPoll {
 
     absl::Status Modify(File* file, uint32_t events, void* ptr = nullptr);
 
+    absl::Status AddOrModify(File* file, uint32_t events, void* ptr = nullptr);
+
     absl::Status Delete(File* file);
+
+    // Deletes file from epoll if the file has been added to epoll.
+    absl::Status DeleteIfExists(File* file);
 
     // Waits epoll, returns triggered events (up to `maxevents` events).
     // `timeout` = nullptr means blocks indefinitely.

@@ -59,6 +59,14 @@ absl::Status EPoll::Modify(File* file, uint32_t events, void* ptr) {
     return absl::OkStatus();
 }
 
+absl::Status EPoll::AddOrModify(File* file, uint32_t events, void* ptr) {
+    if (fd2file_.find(file->fd()) == fd2file_.end()) {
+        return Add(file, events, ptr);
+    } else {
+        return Modify(file, events, ptr);
+    }
+}
+
 absl::Status EPoll::Delete(File* file) {
     if (fd2file_.find(file->fd()) == fd2file_.end()) {
         return absl::InvalidArgumentError(absl::StrFormat(
@@ -71,6 +79,13 @@ absl::Status EPoll::Delete(File* file) {
     fd2file_.erase(file->fd());
     fd2ptr_.erase(file->fd());
 
+    return absl::OkStatus();
+}
+
+absl::Status EPoll::DeleteIfExists(File* file) {
+    if (fd2file_.find(file->fd()) != fd2file_.end()) {
+        return Delete(file);
+    }
     return absl::OkStatus();
 }
 
