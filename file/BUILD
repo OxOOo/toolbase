@@ -92,3 +92,24 @@ cc_test(
         "@com_google_googletest//:gtest_main",
     ],
 )
+
+cc_library(
+    name = "nonblocking",
+    srcs = ["nonblocking.cc"],
+    hdrs = ["nonblocking.h"],
+    deps = [
+        ":file",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings",
+    ],
+)
+
+cc_test(
+    name = "nonblocking_test",
+    srcs = ["nonblocking_test.cc"],
+    deps = [
+        ":nonblocking",
+        "//utils:testing",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
