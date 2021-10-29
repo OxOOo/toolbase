@@ -27,6 +27,10 @@ void NonblockingIO::AppendWriteData(absl::string_view data) {
 }
 
 absl::StatusOr<size_t> NonblockingIO::TryWriteOnce() {
+    if (write_buf_.empty()) {
+        return absl::InternalError("No data to write");
+    }
+
     ssize_t ret = write(file_->fd(), write_buf_.data(), write_buf_.size());
     if (ret < 0) {
         if (errno == EAGAIN || errno == EWOULDBLOCK) {
